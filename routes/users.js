@@ -4,12 +4,10 @@ const User = mongoose.model("User")
 const passport = require("passport")
 const utils = require("../lib/utils")
 
-// TODO
-router.get("/protected", passport.authenticate("jwt", { session: false }), (req, res) => {
-  res.json({ success: true, msg: "You are successfully authenticated to this route!" })
+router.get("/info", passport.authenticate("jwt", { session: false }), (req, res) => {
+  res.json({ success: true, user: req.user })
 })
 
-// TODO
 router.post("/login", (req, res) => {
   let errors = []
 
@@ -31,8 +29,10 @@ router.post("/login", (req, res) => {
         const isValid = utils.validPassword(req.body.password, user.hash, user.salt)
 
         if (isValid) {
+          const sanitized_user = utils.sanitizeUser(user)
           const jwt = utils.issueJWT(user)
-          res.status(200).json({ success: true, user: user, token: jwt.token, expiresIn: jwt.expires })
+
+          res.status(200).json({ success: true, user: sanitized_user, token: jwt.token, expiresIn: jwt.expires })
         } else {
           res.status(401).json({
             success: false,
@@ -84,8 +84,10 @@ router.post("/register", (req, res) => {
         newUser
           .save()
           .then((user) => {
+            const sanitized_user = utils.sanitizeUser(user)
+
             const jwt = utils.issueJWT(user)
-            res.json({ success: true, user: user, token: jwt.token, expiresIn: jwt.expires })
+            res.json({ success: true, user: sanitized_user, token: jwt.token, expiresIn: jwt.expires })
           })
           .catch((err) => {
             res.status(500).json({

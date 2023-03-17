@@ -1,6 +1,7 @@
 const JwtStrategy = require("passport-jwt").Strategy
 const ExtractJwt = require("passport-jwt").ExtractJwt
 const User = require("mongoose").model("User")
+const utils = require("../lib/utils")
 
 // At a minimum, you must pass the `jwtFromRequest` and `secretOrKey` properties
 const options = {
@@ -16,7 +17,7 @@ const strategy = new JwtStrategy(options, (payload, done) => {
       // The `user` variable here is the information from the database
       if (user) {
         // If we found a user, return null (for error) and the user
-        return done(null, user)
+        return done(null, utils.sanitizeUser(user))
       } else {
         // If no user was found, return false (for authentication failed)
         return done(null, false)
