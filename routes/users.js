@@ -59,6 +59,15 @@ router.post("/register", (req, res) => {
   if (!req.body.first) errors.push({ msg: "First name is required.", code: 3 })
   if (!req.body.last) errors.push({ msg: "Last name is required.", code: 4 })
 
+  /*
+   * TODO: Should sanitize / make sure email, password, first, and last
+   *       do not contain potentially harmful javascript code. Make sure
+   *       that the email is a valid email. Make sure that the password
+   *       is a valid password. If input is not santized, then the user
+   *       could potentially be able to run javascript on front end application
+   *       if the front end application does not sanitize the input.
+   */
+
   // responds with errors pertaining post request fields
   if (errors.length > 0) return res.status(400).json({ success: false, errors: errors })
 

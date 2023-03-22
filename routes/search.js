@@ -11,7 +11,7 @@ router.get("/places", passport.authenticate("jwt", { session: false }), (req, re
       res.json({ success: true, data: data })
     })
     .catch((err) => {
-      res.status(400).json({ success: false, errors: [{ msg: err.message, code: 2 }] })
+      res.status(500).json({ success: false, errors: [{ msg: err.message, code: 2 }] })
     })
 })
 
@@ -24,7 +24,7 @@ router.get("/reviews", passport.authenticate("jwt", { session: false }), (req, r
       res.json({ success: true, data: data })
     })
     .catch((err) => {
-      res.status(400).json({ success: false, errors: [{ msg: err.message, code: 2 }] })
+      res.status(500).json({ success: false, errors: [{ msg: err.message, code: 2 }] })
     })
 })
 
